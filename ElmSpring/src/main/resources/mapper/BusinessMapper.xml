@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.elmspring.dao.BusinessDao">
+    <resultMap id="businessFoods" type="com.example.elmspring.model.Business">
+        <result property="id" column="bid"></result>
+        <result property="name" column="bname"></result>
+        <result property="img" column="bimg"></result>
+        <result property="explain" column="bexplain"></result>
+        <result property="startPrice" column="startPrice"></result>
+        <result property="deliveryPrice" column="deliveryPrice"></result>
+        <collection property="foods" ofType="com.example.elmspring.model.Food">
+            <result property="id" column="fid"></result>
+            <result property="name" column="fname"></result>
+            <result property="img" column="fimg"></result>
+            <result property="explain" column="fexplain"></result>
+            <result property="price" column="price"></result>
+        </collection>
+    </resultMap>
+    <select id="findAllBusinesses" resultType="com.example.elmspring.model.Business">
+        select * from business
+    </select>
+
+    <select id="findBusByTypeId" parameterType="Long" resultType="com.example.elmspring.model.Business">
+        select * from business where typeId=#{typeId}
+    </select>
+
+    <select id="findBusById" parameterType="Long" resultMap="businessFoods">
+        select
+            b.id as bid,b.name as bname,b.img as bimg,b.explain as bexplain,startPrice,deliveryPrice,
+            f.id as fid,f.name as fname,f.img as fimg,f.explain as fexplain,price
+        from business b LEFT JOIN food f on b.id = f.businessId where b.id=#{id}
+    </select>
+</mapper>
